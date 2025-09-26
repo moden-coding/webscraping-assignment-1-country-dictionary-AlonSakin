@@ -2,10 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 
 def build_country_dict(soup):
-    pass
+    countries = soup.find_all("div", class_ = "country")
+    country_names = list(map(lambda country: country.find('h3', class_ = "country-name").get_text(strip = True), countries))
+    country_capitals = list(map(lambda country: country.find('span', class_ = "country-capital").get_text(strip = True), countries))
+    country_areas = list(map(lambda country: float(country.find('span', class_ = "country-area").get_text(strip = True)), countries))
+    country_populations = list(map(lambda country: int(country.find('span', class_ = "country-population").get_text(strip = True)), countries))
 
-    
-    
+    zipped = zip(country_names, country_capitals, country_areas, country_populations)
+
+    return {name: {"Population": population, "Area": area, "Capital": capital} for name,capital,area,population in zipped}
 
 
 if __name__ == "__main__":
